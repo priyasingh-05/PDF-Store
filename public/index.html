@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDFMart | Share & Sell PDFs</title>
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+
+
+  <style>
+    html {
+  scroll-behavior: smooth;
+}
+  @keyframes blob {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .animate-blob {
+    animation: blob 8s infinite ease-in-out;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease forwards;
+  }
+
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+     @keyframes blob {
+    0%, 100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -20px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 8s infinite ease-in-out;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #9333ea;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+
+  .card-glow {
+    position: relative;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 0 0 transparent;
+    transition: box-shadow 0.3s ease;
+    overflow: hidden;
+  }
+
+  .card-glow::before {
+    content: "";
+    position: absolute;
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(0, 123, 255, 0.25), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+
+  .card-glow * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .download-btn {
+    position: relative;
+    display: inline-block;
+    padding: 10px 18px;
+    background: #111;
+    color: #fff;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+
+  .download-btn::before {
+    content: "";
+    position: absolute;
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(0, 123, 255, 0.5), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 0;
+  }
+
+  .download-btn:hover::before {
+    opacity: 1;
+  }
+
+  .download-btn span {
+    position: relative;
+    z-index: 1;
+  }
+</style>
+
+
+</head>
+<body class="bg-gray-50 font-sans transition duration-300" id="theme">
+    <!-- Header -->
+<!-- ✅ Modern & Professional Navbar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-purple-100 shadow-sm">
+  <nav class="w-full flex items-center justify-between px-10 py-3">
+
+    
+    <!-- Logo & Brand -->
+    <div class="flex items-center space-x-2">
+      <img src="images/logo.png" alt="Logo" class="w-8 h-8" />
+      <span class="text-xl font-bold text-purple-700">PDFMart</span>
+    </div>
+
+    <!-- Center Nav Links (hidden on small screens) -->
+   <ul class="hidden md:flex space-x-8 text-gray-700 font-medium">
+  <!-- Dashboard -->
+  <li>
+    <a href="#dashboard" class="relative group flex items-center gap-2">
+      <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+      <span class="absolute left-0 -bottom-1 h-[2px] w-0 bg-purple-600 opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"></span>
+    </a>
+  </li>
+
+  <!-- Upload -->
+  <li>
+    <a href="#upload" class="relative group flex items-center gap-2">
+      <i data-lucide="upload-cloud" class="w-5 h-5"></i> Upload
+      <span class="absolute left-0 -bottom-1 h-[2px] w-0 bg-purple-600 opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"></span>
+    </a>
+  </li>
+
+  <!-- Browse -->
+  <li>
+    <a href="#store" class="relative group flex items-center gap-2">
+      <i data-lucide="search" class="w-5 h-5"></i> Browse
+      <span class="absolute left-0 -bottom-1 h-[2px] w-0 bg-purple-600 opacity-0 transition-all duration-300 group-hover:w-full group-hover:opacity-100"></span>
+    </a>
+  </li>
+</ul>
+
+
+    <!-- Right Side: Search, Profile, Cart -->
+    <div class="flex items-center space-x-4">
+
+      <!-- 🔍 Search (optional) -->
+      <div class="relative hidden md:block">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="border border-gray-300 rounded-full px-4 py-1.5 pl-10 focus:outline-none focus:ring-2 focus:ring-purple-400"
+        />
+        <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+        </svg>
+      </div>
+
+      <!-- 👤 Sign In / Profile -->
+      <a href="javascript:void(0)" id="signinButton" onclick="openLogin()" class="text-sm bg-purple-600 text-white px-4 py-1.5 rounded-full hover:bg-purple-700 transition">
+        Sign In
+      </a>
+      <span id="userProfile" class="hidden text-sm font-medium text-purple-700">👤 Welcome, User</span>
+
+      <!-- 🛒 Cart -->
+      <button onclick="openCart()" class="relative text-purple-700 hover:text-purple-900">
+        🛒
+        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">0</span>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- To prevent content being hidden behind fixed header -->
+<div class="h-[64px]"></div>
+
+        
+          <!-- Hamburger (Mobile) -->
+          <button class="md:hidden text-gray-600 focus:outline-none" onclick="toggleMobileNav()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileNav" class="md:hidden hidden px-4 pb-4 space-y-2 bg-white text-gray-600 font-medium">
+      <a href="views/dashboard.ejs" class="block hover:text-purple-700">Dashboard</a>
+      <a href="#upload" class="block hover:text-purple-700">Upload</a>
+      <a href="#store" class="block hover:text-purple-700">Browse</a>
+      <input
+        type="text"
+        placeholder="Search..."
+        class="w-full border border-gray-300 rounded-full px-4 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-400"
+      />
+    </div>
+  </header>
+<div class="pt-20"></div>
+
+</header>
+
+
+<!-- 🚀 Hero Section with Logo + Animation -->
+<section class="relative h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-100 via-blue-100 to-white">
+  <!-- Animated gradient blobs -->
+  <div class="absolute inset-0 z-0 overflow-hidden">
+    <div class="absolute top-[-50%] left-[-20%] w-[600px] h-[600px] bg-purple-300 opacity-20 rounded-full blur-3xl animate-blob"></div>
+    <div class="absolute bottom-[-30%] right-[-20%] w-[500px] h-[500px] bg-blue-300 opacity-20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-6xl px-6 flex flex-col md:flex-row items-center justify-between w-full gap-12">
+    
+    <!-- LEFT: Logo + Headline + CTA -->
+    <div class="text-center md:text-left max-w-xl space-y-4 animate-fade-in">
+      <img src="images/logo.png" alt="PDFMart Logo" class="w-32 h-auto mx-auto md:mx-0 mb-4" />
+
+      <h1 class="text-5xl font-bold text-purple-800 leading-tight">
+        Discover, Share & Sell Quality PDFs
+      </h1>
+
+      <p class="text-gray-700 text-lg">
+        Upload your notes, resumes, or projects — or download top-rated study material in seconds.
+      </p>
+
+      <a href="#store" class="inline-block mt-4 bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
+        🚀 Browse PDFs
+      </a>
+    </div>
+
+    <!-- RIGHT: Lottie Animated Mascot -->
+    <div class="max-w-md w-full animate-fade-in delay-300">
+      <lottie-player
+        src="https://assets2.lottiefiles.com/packages/lf20_jtbfg2nb.json"
+        background="transparent"
+        speed="1"
+        style="width: 100%; height: auto"
+        loop
+        autoplay
+      ></lottie-player>
+    </div>
+    <!-- Optional scroll-down arrow -->
+    <div class="mt-12 animate-bounce text-purple-600 text-2xl">
+      ↓
+    </div>
+  </div>
+</section>
+
+<section class="py-20 bg-white text-center" id="how-it-works" data-aos="fade-up">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-purple-700 mb-8">🚀 How PDFMart Works</h2>
+    
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Step 1 -->
+      <div class="p-6 rounded-xl shadow hover:shadow-xl transition bg-purple-50" data-aos="zoom-in" data-aos-delay="100">
+        <div class="text-4xl mb-4">📝</div>
+        <h3 class="text-xl font-semibold mb-2">Upload Your PDFs</h3>
+        <p class="text-gray-600 text-sm">Add title, price, and your PDF — we handle the rest securely.</p>
+      </div>
+      
+      <!-- Step 2 -->
+      <div class="p-6 rounded-xl shadow hover:shadow-xl transition bg-purple-50" data-aos="zoom-in" data-aos-delay="200">
+        <div class="text-4xl mb-4">🛍️</div>
+        <h3 class="text-xl font-semibold mb-2">Sell or Share</h3>
+        <p class="text-gray-600 text-sm">Set your price or offer for free — students & creators will find it.</p>
+      </div>
+      
+      <!-- Step 3 -->
+      <div class="p-6 rounded-xl shadow hover:shadow-xl transition bg-purple-50" data-aos="zoom-in" data-aos-delay="300">
+        <div class="text-4xl mb-4">💸</div>
+        <h3 class="text-xl font-semibold mb-2">Earn or Download</h3>
+        <p class="text-gray-600 text-sm">Download notes or earn through Razorpay — simple and fast.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  <!-- ✅ Sign In Modal -->
+<div id="signupModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md relative">
+
+    <!-- ❌ Close Button -->
+    <button onclick="closeSignup()" class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-red-600">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center text-purple-700 mb-4">Create Account</h2>
+
+    <form id="signupForm" onsubmit="submitSignup(event)" class="space-y-4">
+      <input type="text" id="name" placeholder="Full Name" class="w-full border p-2 rounded" required />
+      <input type="text" id="username" placeholder="Username" class="w-full border p-2 rounded" required />
+      <input type="email" id="email" placeholder="Email" class="w-full border p-2 rounded" required />
+      <input type="password" id="password" placeholder="Password" class="w-full border p-2 rounded" required />
+      <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Sign Up</button>
+      <p class="text-sm text-center mt-2 text-gray-600">
+  Already have an account?
+  <a href="javascript:void(0)" onclick="switchToLogin()" class="text-purple-600 font-medium hover:underline">
+    Log in
+  </a>
+</p>
+
+    </form>
+  </div>
+</div> 
+<!-- ✅ Login Modal -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md relative">
+    <button onclick="closeLogin()" class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-red-600">
+      &times;
+    </button>
+    <h2 class="text-2xl font-bold text-center text-purple-700 mb-4">Log In</h2>
+    <form id="loginForm" onsubmit="submitLogin(event)" class="space-y-4">
+      <input type="email" id="loginEmail" placeholder="Email" class="w-full border p-2 rounded" required />
+      <input type="password" id="loginPassword" placeholder="Password" class="w-full border p-2 rounded" required />
+      <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Login</button>
+      <!-- Add this below your login button -->
+<p class="text-center text-sm mt-4">
+  Don’t have an account?
+  <a href="javascript:void(0)" onclick="openSignup()" class="text-purple-600 hover:underline font-medium">
+    Sign up
+  </a>
+</p>
+
+    </form>
+  </div>
+</div>
+
+ 
+<!-- Upload Form -->
+<section id="upload" class="max-w-xl mx-auto mt-16 p-6 bg-white rounded shadow">
+  <!-- Animation + Title -->
+  <div class="text-center mb-4">
+    <lottie-player
+      src="https://assets7.lottiefiles.com/packages/lf20_zw0djhar.json"
+      background="transparent"
+      speed="1"
+      style="width: 80px; height: 80px; margin: auto;"
+      loop
+      autoplay>
+    </lottie-player>
+    <h3 class="text-2xl font-bold text-gray-700 mt-2">📤 Upload a PDF</h3>
+  </div>
+
+  <!-- Form -->
+  <form id="uploadForm" class="space-y-4" enctype="multipart/form-data">
+    <input type="text" name="title" placeholder="PDF Title" class="w-full border p-2 rounded" required />
+    <input type="text" name="author" placeholder="Author Name" class="w-full border p-2 rounded" required />
+    <input type="number" name="price" placeholder="Price (₹)" class="w-full border p-2 rounded" required />
+    <input type="file" name="pdf" class="w-full border p-2 rounded" required />
+    
+    <!-- Upload button with animation -->
+    <div class="flex items-center space-x-3">
+      <input type="text" name="tags" placeholder="Tags (comma separated)" class="w-full border p-2 rounded" />
+
+<select name="category" class="w-full border p-2 rounded" required>
+  <option value="">Select PDF Type</option>
+  <option value="Notes">Notes</option>
+  <option value="Resume">Resume</option>
+  <option value="Project">Project</option>
+  <option value="Question Papers">Question Papers</option>
+  <option value="Other">Other</option>
+</select>
+
+      <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700">
+        Upload
+      </button>
+      <lottie-player
+        src="https://assets2.lottiefiles.com/packages/lf20_q5pk6p1k.json"
+        background="transparent"
+        speed="1"
+        style="width: 40px; height: 40px"
+        loop
+        autoplay>
+      </lottie-player>
+    </div>
+  </form>
+</section>
+
+  <!-- Product Listing -->
+  <section id="store" class="max-w-6xl mx-auto mt-20 p-4">
+    <h3 class="text-2xl font-bold text-gray-700 mb-6">🛍️ Available PDFs</h3>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+  <!-- Category Filter -->
+  <select id="categoryFilter" class="border rounded px-4 py-2 w-full md:w-1/3">
+    <option value="">Filter by Category</option>
+    <option value="Notes">Notes</option>
+    <option value="Resume">Resume</option>
+    <option value="Project">Project</option>
+    <option value="Question Paper">Question Paper</option>
+  </select>
+
+  <!-- Tag Search -->
+  <input type="text" id="tagSearch" placeholder="Search by tags (e.g. html, gate)" class="border rounded px-4 py-2 w-full md:w-1/2" />
+</div>
+    <div id="pdfList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </section>
+
+  <!-- Razorpay Payment Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+  <!-- Scripts -->
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    once: false
+  });
+</script>
+
+
+
+<section class="py-16 bg-gradient-to-br from-purple-100 to-blue-100" data-aos="fade-up">
+  <div class="max-w-6xl mx-auto px-4 text-center">
+    <h2 class="text-3xl font-bold text-purple-700 mb-10">🌟 Featured Picks</h2>
+    
+    <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Card 1 -->
+      <div class="backdrop-blur-md bg-white/30 border border-white/40 rounded-xl shadow-lg p-6 text-left transition hover:scale-105 hover:shadow-xl duration-300"
+           data-aos="zoom-in" data-aos-delay="100">
+        <h3 class="text-xl font-bold text-purple-800 mb-2">Top JavaScript Projects</h3>
+        <p class="text-gray-700 text-sm mb-4">Best for final-year students learning web development.</p>
+        <a href="#" class="text-sm font-semibold text-purple-600 hover:underline">View Details →</a>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="backdrop-blur-md bg-white/30 border border-white/40 rounded-xl shadow-lg p-6 text-left transition hover:scale-105 hover:shadow-xl duration-300"
+           data-aos="zoom-in" data-aos-delay="200">
+        <h3 class="text-xl font-bold text-purple-800 mb-2">GATE 2025 Short Notes</h3>
+        <p class="text-gray-700 text-sm mb-4">Concise handwritten notes for quick revision & toppers.</p>
+        <a href="#" class="text-sm font-semibold text-purple-600 hover:underline">Download Now →</a>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="backdrop-blur-md bg-white/30 border border-white/40 rounded-xl shadow-lg p-6 text-left transition hover:scale-105 hover:shadow-xl duration-300"
+           data-aos="zoom-in" data-aos-delay="300">
+        <h3 class="text-xl font-bold text-purple-800 mb-2">Resume Templates</h3>
+        <p class="text-gray-700 text-sm mb-4">Modern, clean resumes in PDF format for freshers & interns.</p>
+        <a href="#" class="text-sm font-semibold text-purple-600 hover:underline">Get Template →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  
+
+ 
+
+
+  <!-- Cart Modal -->
+<div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
+    <button onclick="closeCart()" class="absolute top-2 right-3 text-xl font-bold text-gray-500 hover:text-red-500">&times;</button>
+    <h2 class="text-2xl font-bold text-purple-700 mb-4">🛒 Your Cart</h2>
+    <div id="cartItems" class="space-y-4 max-h-64 overflow-y-auto"></div>
+    <div class="mt-4 text-right font-semibold text-lg text-gray-700">
+      Total: ₹<span id="cartTotal">0</span>
+    </div>
+    <button onclick="checkoutCart()" class="mt-4 bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 w-full">Checkout</button>
+  </div>
+</div>
+
+
+<script>
+  let cart = [];
+
+  function addToCart(id, title, price) {
+    const existing = cart.find(item => item.id === id);
+    if (!existing) {
+      cart.push({ id, title, price: parseFloat(price) });
+      updateCartCount();
+      alert(`${title} added to cart!`);
+    } else {
+      alert(`${title} is already in the cart.`);
+    }
+  }
+
+  function updateCartCount() {
+    document.getElementById("cartCount").innerText = cart.length;
+  }
+
+  function openCart() {
+    renderCartItems();
+    document.getElementById("cartModal").classList.remove("hidden");
+  }
+
+  function closeCart() {
+    document.getElementById("cartModal").classList.add("hidden");
+  }
+
+  function renderCartItems() {
+    const container = document.getElementById("cartItems");
+    container.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price;
+      const el = document.createElement("div");
+      el.className = "flex justify-between items-center border-b pb-2";
+      el.innerHTML = `
+        <div>
+          <p class="font-semibold">${item.title}</p>
+          <p class="text-sm text-gray-500">₹${item.price}</p>
+        </div>
+        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+      `;
+      container.appendChild(el);
+    });
+
+    document.getElementById("cartTotal").innerText = total.toFixed(2);
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartCount();
+    renderCartItems();
+  }
+
+  function checkoutCart() {
+    if (cart.length === 0) return alert("Cart is empty.");
+
+    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+
+    const options = {
+      key: "rzp_test_YourKey", // Replace with your Razorpay key
+      amount: totalAmount * 100,
+      currency: "INR",
+      name: "PDFMart",
+      description: "PDF Purchase",
+      handler: function () {
+        alert("Payment successful! Redirecting to download...");
+        cart.forEach(item => {
+          window.open(`/download/${item.id}`, "_blank");
+        });
+        cart = [];
+        updateCartCount();
+        closeCart();
+      },
+      prefill: {
+        name: "PDF Buyer",
+        email: "buyer@example.com"
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  }
+</script>
+
+  <script>
+    // Upload PDF
+    const form = document.getElementById("uploadForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Upload failed");
+        alert("✅ PDF uploaded!");
+        form.reset();
+        loadPDFs();
+
+      } catch (err) {
+        alert("❌ Upload failed: " + err.message);
+      }
+    });
+
+    // Load and display PDFs
+async function loadPDFs() {
+  const res = await fetch("http://localhost:5000/pdfs");
+  const pdfs = await res.json();
+
+  const category = document.getElementById("categoryFilter").value;
+  const tagQuery = document.getElementById("tagSearch").value.toLowerCase();
+
+  const container = document.getElementById("pdfList");
+  container.innerHTML = "";
+
+  const filtered = pdfs.filter(pdf => {
+    const tagMatch = tagQuery
+      ? pdf.tags?.some(tag => tag.toLowerCase().includes(tagQuery))
+      : true;
+    const categoryMatch = category ? pdf.category === category : true;
+    return tagMatch && categoryMatch;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<p class="text-gray-500 text-center col-span-full">No PDFs match your filter.</p>`;
+    return;
+  }
+
+  filtered.forEach(pdf => {
+    const card = document.createElement("div");
+    card.className = "card-glow";
+
+    card.innerHTML = `
+      <canvas id="thumb-${pdf._id}" style="width:100%; height:auto; margin-bottom: 10px;"></canvas>
+      <h3 style="margin: 8px 0;">${pdf.title}</h3>
+      <p><strong>Author:</strong> ${pdf.author}</p>
+      <p><strong>Category:</strong> ${pdf.category || 'N/A'}</p>
+      <p><strong>Price:</strong> ₹${pdf.price}</p>
+      <p class="text-sm text-gray-500">Tags: ${pdf.tags?.join(", ") || 'None'}</p>
+
+      <div class="flex flex-col items-center space-y-2 mt-3">
+        <button onclick="buyPDF('${pdf._id}', '${pdf.price}')" class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">
+          💳 Buy Now
+        </button>
+        <button onclick="addToCart('${pdf._id}', '${pdf.title}', '${pdf.price}')" class="bg-purple-600 text-white px-4 py-1 rounded hover:bg-purple-700 transition">
+          🛒 Add to Cart
+        </button>
+        <button onclick="previewPDF('http://localhost:5000/${pdf.filePath}', 'preview-${pdf._id}')" class="text-sm text-blue-600 underline">
+          📄 Preview (2 pages)
+        </button>
+      </div>
+
+      <div id="preview-${pdf._id}" style="margin-top: 10px;"></div>
+    `;
+
+    container.appendChild(card);
+    renderThumbnail(`http://localhost:5000/${pdf.filePath}`, `thumb-${pdf._id}`);
+  });
+}
+
+async function renderThumbnail(pdfUrl, canvasId) {
+  try {
+    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+    const page = await pdf.getPage(1);
+
+    const scale = 1;
+    const viewport = page.getViewport({ scale });
+
+    // Create offscreen canvas to render full page
+    const fullCanvas = document.createElement("canvas");
+    const fullContext = fullCanvas.getContext("2d");
+
+    fullCanvas.width = viewport.width;
+    fullCanvas.height = viewport.height;
+
+    await page.render({ canvasContext: fullContext, viewport }).promise;
+
+    // Get target canvas (shown on page)
+    const visibleCanvas = document.getElementById(canvasId);
+    const visibleContext = visibleCanvas.getContext("2d");
+
+    // Set height to show top 50% only
+    const cropHeight = Math.floor(viewport.height / 2);
+    visibleCanvas.width = viewport.width;
+    visibleCanvas.height = cropHeight;
+
+    // Draw only the top half
+    visibleContext.drawImage(
+      fullCanvas,
+      0, 0,                   // source x, y
+      viewport.width, cropHeight, // source width, height
+      0, 0,                   // dest x, y
+      viewport.width, cropHeight  // dest width, height
+    );
+  } catch (err) {
+    console.error("❌ Thumbnail crop error:", err);
+  }
+}
+
+
+  async function previewPDF(pdfUrl, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ""; // clear previous preview
+
+    try {
+      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+      const pagesToRender = Math.min(pdf.numPages, 2);
+
+      for (let i = 1; i <= pagesToRender; i++) {
+        const page = await pdf.getPage(i);
+        const scale = 1.0;
+        const viewport = page.getViewport({ scale });
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        container.appendChild(canvas);
+        await page.render({ canvasContext: context, viewport }).promise;
+      }
+    } catch (err) {
+      console.error("Preview error:", err);
+      container.innerText = "❌ Failed to preview PDF.";
+    }
+  }
+
+  loadPDFs(); // already present
+document.getElementById("categoryFilter").addEventListener("change", loadPDFs);
+document.getElementById("tagSearch").addEventListener("input", debounce(loadPDFs, 300));
+
+function debounce(func, delay) {
+  let timeout;
+  return function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(func, delay);
+  };
+}
+
+
+  // Add mouse glow to all .card-glow and .download-btn
+document.addEventListener("mousemove", (e) => {
+  document.querySelectorAll(".card-glow, .download-btn").forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    el.style.setProperty("--x", `${x}px`);
+    el.style.setProperty("--y", `${y}px`);
+  });
+});
+
+
+</script>
+
+    
+
+<!-- ✅ sing/ LOGIN in Modal Script -->
+  <script>
+    function opensignupModal() {
+  document.getElementById("signinModal").classList.remove("hidden");
+}
+
+function closesignupModal() {
+  document.getElementById("signinModal").classList.add("hidden");
+}
+
+   function openSignup() {
+    document.getElementById("signupModal").classList.remove("hidden");
+    document.getElementById("signupModal").classList.add("flex");
+      // Hide login modal if open
+  document.getElementById("loginModal")?.classList.add("hidden");
+  document.getElementById("loginModal")?.classList.remove("flex");
+  }
+
+  function closeSignup() {
+    document.getElementById("signupModal").classList.remove("flex");
+    document.getElementById("signupModal").classList.add("hidden");
+  }
+
+  async function submitSignup(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("http://localhost:5000/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, username, email, password })
+  });
+
+  const message = await res.text();
+
+  if (res.ok) {
+    // ✅ Store user info and update UI
+    localStorage.setItem("user", JSON.stringify({ name, username, email }));
+    updateUserUI();
+
+    alert("✅ Account created!");
+    closeSignup();
+    document.getElementById("signupForm").reset();
+  } else {
+    alert("❌ " + message);
+  }
+}
+
+  function updateUserUI() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const signinBtn = document.getElementById("signinButton");
+  const profile = document.getElementById("userProfile");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+    signinBtn.classList.add("hidden");
+    profile.classList.remove("hidden");
+    profile.textContent = `👤 ${user.name}`;
+    logoutBtn?.classList.remove("hidden")
+  } else {
+    signinBtn.classList.remove("hidden");
+    profile.classList.add("hidden");
+    profile.textContent = "";
+    logoutBtn?.classList.add("hidden");
+  }
+}
+function logoutUser() {
+  localStorage.removeItem("user");
+  updateUserUI();
+}
+function openLogin() {
+  document.getElementById("loginModal").classList.remove("hidden");
+  document.getElementById("loginModal").classList.add("flex");
+}
+
+function closeLogin() {
+  document.getElementById("loginModal").classList.remove("flex");
+  document.getElementById("loginModal").classList.add("hidden");
+}
+async function submitLogin(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  const res = await fetch("http://localhost:5000/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem("user", JSON.stringify(data));
+    updateUserUI();
+    closeLogin();
+    document.getElementById("loginForm").reset();
+    alert("✅ Logged in successfully!");
+  } else {
+    alert("❌ " + (data.error || "Login failed"));
+  }
+}
+function switchToLogin() {
+  closeSignup();   // hide the sign-up modal
+  openLogin();     // show the login modal
+}
+
+
+
+updateUserUI();
+
+document.addEventListener("scroll", () => {
+  const sections = ["dashboard", "upload", "store"];
+  const scrollOffset = 120;
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    const link = document.querySelector(`a[href="#${id}"]`);
+    if (el && link) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= scrollOffset && rect.bottom > scrollOffset) {
+        link.classList.add("text-purple-700", "font-semibold");
+        link.querySelector("i")?.classList.add("stroke-purple-700");
+      } else {
+        link.classList.remove("text-purple-700", "font-semibold");
+        link.querySelector("i")?.classList.remove("stroke-purple-700");
+      }
+    }
+  });
+});
+
+
+</script>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 800, once: true });
+</script>
+
+<script>
+  lucide.createIcons();
+</script>
+
+
+  <!-- Footer -->
+  <footer class="text-center py-6 mt-20 bg-white text-gray-500">
+    &copy; 2025 PDFMart. Built for learners, by learners. 🧠
+  </footer>
+</body>
+</html>
